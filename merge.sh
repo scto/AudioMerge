@@ -19,7 +19,7 @@ do
 				exit 1
 			fi
 			
-			if [[ $(find ${audio_dir} -iname "*.mp3" -o -iname "*.wav" | wc -l) -eq 0 ]] ; then
+			if [[ $(find ${audio_dir} -iname "*.m4a" -o -iname "*.mp3" -o -iname "*.wav" | wc -l) -eq 0 ]] ; then
 				echo 'No audio files in directory'
 				exit 2
 			fi
@@ -42,7 +42,7 @@ do
 	shift
 done
 
-count_file_in_dir=$(find ${audio_dir} -iname "*.mp3" -o -iname "*.wav" | wc -l)
+count_file_in_dir=$(find ${audio_dir} -iname "*.m4a" -o -iname "*.mp3" -o -iname "*.wav" | wc -l)
 if [[ ${count_file_in_dir} -eq 0 ]] ; then
     echo 'No audio files in directory'
     exit 5
@@ -56,7 +56,7 @@ number_files_in_merge=$(( ${count_file_in_dir} / ${count_of_output_files} ))
 i=0
 part=0
 out=''
-find ${audio_dir} -iname "*.mp3" -o -iname "*.wav" | sort | while read file  ; do
+find ${audio_dir} -iname "*.m4a" -o -iname "*.mp3" -o -iname "*.wav" | sort | while read file  ; do
 	i=$(( ${i} + 1 ))
 	need_new_part=$(( ${i} % ${number_files_in_merge} ))
 	test=$(( ${i} + ${number_files_in_merge} ))
@@ -65,7 +65,7 @@ find ${audio_dir} -iname "*.mp3" -o -iname "*.wav" | sort | while read file  ; d
 	if [[ ${need_new_part} -eq 0 && ${test} -le ${count_file_in_dir} || ${i} -eq ${count_file_in_dir} ]] ; then
 		part=$(( ${part} + 1))
         str="${str:1}"
-		$(ffmpeg -i "concat:$str" -acodec copy "output$part.wav")
+		$(ffmpeg -i "concat:$str" -acodec copy "output$part.m4a")
 		str=''
 	fi
 done
